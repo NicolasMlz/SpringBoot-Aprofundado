@@ -17,22 +17,28 @@
 		<java.version>11</java.version>
 	</properties>
 	<dependencies>
+	
+		<!-- Dependência padrão de inicialização web-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		
+		<!-- Lombok é um facilitador de códigos, uma ferramenta muito utilizada-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>	
 		</dependency>
-
+		
+		<!-- Atualiza a aplicação de fáorma rpida e inteligente-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		
+		<!-- Dependência de teste unitário do Spring Boot-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

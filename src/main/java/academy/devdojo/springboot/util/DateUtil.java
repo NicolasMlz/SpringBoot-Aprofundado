@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Component;
 
 /*
- * Tansforma a classe em bin possivel de ser scaneado pelo Spring
+ * Tansforma a classe em bin para ser possivel de ser scaneado pelo Spring
  */
 @Component
 public class DateUtil {

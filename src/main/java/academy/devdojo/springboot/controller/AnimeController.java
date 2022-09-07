@@ -3,11 +3,17 @@ package academy.devdojo.springboot.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import academy.devdojo.springboot.domain.Anime;
+import academy.devdojo.springboot.service.AnimeService;
 import academy.devdojo.springboot.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,8 +33,10 @@ import lombok.extern.log4j.Log4j2;
  * A anotação request a nivel de classe permite que nós criemos
  * um contexto para diferenciar o retorno das funções dessa classe, 
  * das outras classes controladoras.
+ * 
+ * Geralmente o path é escrito no plural: animes, usuarios, clientes, etc
  */
-@RequestMapping(path = "anime")
+@RequestMapping(path = "animes")
 
 /*
  * O lombok é uma ferramenta que facilita a escrita de muitos códigos
@@ -51,7 +59,13 @@ public class AnimeController {
 	
 	//Attributes
 	private final DateUtil dateUtil; // MOSTRARÁ QUANDO FOI ACESSADO O SITE 
-
+	
+	/*
+	 * Como fará parte do construtor definido pelo @RequiredArgsConstructor,
+	 * na classe AnimeService, deve ser definida em sua classe para retornar um bin, para
+	 * que seja captada pela notation
+	 */
+	private final AnimeService animeService; // JOGA A RESPONSABILIDADE PARA A CLASSE SERVICE
 	
 	
 // ESTÁ COMENTADO POIS EQUIVALE A ANOTAÇÃO @AllArgsConstructor
@@ -81,12 +95,39 @@ public class AnimeController {
 	 * de determinada função, e nesse caso é o get, seguido do contexto
 	 * que devemos acessar para obtê-lo
 	 * 
-	 * EQUIVALENTE A: localhost:8080/anime/list
+	 * EQUIVALENTE A: localhost:8080/animes
 	 */
-	@GetMapping(path = "list")
-	public List<Anime> list() {
+	@GetMapping
+	public ResponseEntity<List<Anime>> list() {
 		log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
-		return List.of(new Anime("DBZ"), new Anime("Berserker"));
+		
+		//Essa entidade serve para retornar informaõçes extras importantes junto com o JSON
+		return ResponseEntity.ok(animeService.listAll()); 
+	}
+	
+	/*
+	 * Nesse caso necessita-se usar o path, pq essa classe possui 2 métodos http get
+	 * então é necessário diferenciá-los um do outro
+	 * 
+	 * Note a forma como se capta uma variável passada pela url {variavel} e @PathVariable
+	 */
+	@GetMapping(path = "/{id}")
+	public ResponseEntity<Anime> findById(@PathVariable Long id) {
+		
+		//Essa entidade serve para retornar informaõçes extras importantes junto com o JSON
+		return ResponseEntity.ok(animeService.findById(id)); 
+	}
+	
+	/*
+	 * Post serve para postar no banco de dados os dados que o usuario registrou durante
+	 * seu uso do site
+	 */
+	@PostMapping
+	public ResponseEntity<Anime> save(@RequestBody Anime anime) {
+		
+		// Essa é outra forma de utilizar a entidade para também retornar o status de criado
+		// Lembrando que esse status está associado a um número
+		return new ResponseEntity<>(animeService.save(anime), HttpStatus.CREATED);
 	}
 
 }
