@@ -2,12 +2,15 @@ package academy.devdojo.springboot.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import academy.devdojo.springboot.domain.Anime;
+import academy.devdojo.springboot.exception.BadRequestException;
 import academy.devdojo.springboot.repository.AnimeRepository;
 import academy.devdojo.springboot.request.AnimePostRequestBody;
 import academy.devdojo.springboot.request.AnimePutRequestBody;
@@ -39,16 +42,29 @@ public class AnimeService {
 	
 	//Methods
 	/* O list ALL é pouco utilizado por motivos óbvios*/
-	public List<Anime> listAll() {
-		return animeRepository.findAll();
+	public Page<Anime> listAll(Pageable pageable) {
+		return animeRepository.findAll(pageable);
+	}
+	
+	//Obter anime por nome
+	public List<Anime> findByName(String name) {
+		return animeRepository.findByName(name);
 	}
 	
 	//Obter anime por id
 	public Anime findByIdOrThrowBadRequestException(Long id) {
 		return animeRepository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime Not Found"));
+				.orElseThrow(() -> new BadRequestException("Anime Not Found"));
 	}
 
+	 /* Essa notation eh responsavel por cuidar de que o metodo nao conclua caso 
+	 * alguma exception seja lancada.
+	 * 
+	 * Sem ela, mesmo com a exception, o metodo salvara o anime passado como parametro
+	 * 
+	 * Ela pode ser usada para outros metodos tambem
+	 */
+	@Transactional
 	/* 
 	 * Salvar anime em um banco de dados através dos dados obtidos no postman
 	 */

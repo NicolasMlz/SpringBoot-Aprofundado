@@ -1,5 +1,7 @@
 package academy.devdojo.springboot.repository;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -29,4 +31,9 @@ public interface AnimeRepository extends JpaRepository<Anime, Long>{
 	 * entre outros...
 	 */
 	
+	/*
+	 * Eh possivel estabelecer pesquisas sql especificas
+	 */
+	public List<Anime> findByName(String name);
+
 }

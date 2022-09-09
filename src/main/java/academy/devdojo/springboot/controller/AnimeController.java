@@ -3,6 +3,10 @@ package academy.devdojo.springboot.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import academy.devdojo.springboot.domain.Anime;
@@ -101,13 +106,16 @@ public class AnimeController {
 	 * 
 	 * EQUIVALENTE A: localhost:8080/animes
 	 */
+	/*
+	 * O pageable esta sendo passado como parametro para definir os elementos
+	 * disponibilizados por pagina por vez... O parametro deve ser alterado
+	 * no anime service tambem
+	 */
 	@GetMapping
-	public ResponseEntity<List<Anime>> list() {
-		log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
-		
-		//Essa entidade serve para retornar informaõçes extras importantes junto com o JSON
-		return ResponseEntity.ok(animeService.listAll()); 
-	}
+	public ResponseEntity<Page<Anime>> list(Pageable pageable) {
+        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+        return ResponseEntity.ok(animeService.listAll(pageable));
+    }
 	
 	/*
 	 * Nesse caso necessita-se usar o path, pq essa classe possui 2 métodos http get
@@ -123,6 +131,22 @@ public class AnimeController {
 	}
 	
 	/*
+	 * Encontrar pelo nome requer um request parameter, sendo essa notation mais viavel para
+	 * parametros especificos, como nome, idade, inicial, etc... pois os parametros sao nomeados
+	 * 
+	 * Dessa forma sera melhor diferenciado de uma pathVariable
+	 * 
+	 * Na url é necessária digitar o endereço padrão, mas adicionar após o FIND um ?, e 
+	 * especificar as variaveis
+	 * 
+	 * EXEMPLO ==========> http://localhost:8080/animes/find?name=Death Note
+	 */
+	@GetMapping(path = "/find")
+	public ResponseEntity<List<Anime>> findByName(@RequestParam String name) {
+		return ResponseEntity.ok(animeService.findByName(name));
+	}
+	
+	/*
 	 * Post serve para postar no banco de dados os dados que o usuario registrou durante
 	 * seu uso do site
 	 * 
@@ -131,7 +155,7 @@ public class AnimeController {
 	 * por exemplo)
 	 */
 	@PostMapping
-	public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBody animePostRequestBody) {
+	public ResponseEntity<Anime> save(@RequestBody @Valid AnimePostRequestBody animePostRequestBody) {
 		
 		// Essa é outra forma de utilizar a entidade para também retornar o status de criado
 		// Lembrando que esse status está associado a um número
