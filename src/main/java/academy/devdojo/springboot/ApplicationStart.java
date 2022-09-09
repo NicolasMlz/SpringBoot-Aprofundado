@@ -27,7 +27,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // * aplicação
 // */
 //@Configuration
-
 @SpringBootApplication
 public class ApplicationStart {
 	public static void main(String[] args) {

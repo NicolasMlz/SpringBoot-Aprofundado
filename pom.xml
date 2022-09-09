@@ -18,16 +18,23 @@
 	</properties>
 	<dependencies>
 	
+		<!-- Dependencia que envolve o ferramente banco de dados do spring-->		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		
+		<!-- Dependencia que envolve o postgresql de fato-->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>		
+		
 		<!-- Dependência padrão de inicialização web-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		
-		<!-- Lombok é um facilitador de códigos, uma ferramenta muito utilizada-->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>	
 		</dependency>
 		
 		<!-- Atualiza a aplicação de fáorma rpida e inteligente-->
@@ -38,12 +45,26 @@
 			<optional>true</optional>
 		</dependency>
 		
+		<!-- Lombok é um facilitador de códigos, uma ferramenta muito utilizada-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		
 		<!-- Dependência de teste unitário do Spring Boot-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+    	
 	</dependencies>
 
 	<build>

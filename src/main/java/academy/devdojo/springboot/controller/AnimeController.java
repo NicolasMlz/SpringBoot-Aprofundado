@@ -5,14 +5,18 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import academy.devdojo.springboot.domain.Anime;
+import academy.devdojo.springboot.request.AnimePostRequestBody;
+import academy.devdojo.springboot.request.AnimePutRequestBody;
 import academy.devdojo.springboot.service.AnimeService;
 import academy.devdojo.springboot.util.DateUtil;
 import lombok.RequiredArgsConstructor;
@@ -115,19 +119,48 @@ public class AnimeController {
 	public ResponseEntity<Anime> findById(@PathVariable Long id) {
 		
 		//Essa entidade serve para retornar informaõçes extras importantes junto com o JSON
-		return ResponseEntity.ok(animeService.findById(id)); 
+		return ResponseEntity.ok(animeService.findByIdOrThrowBadRequestException(id)); 
 	}
 	
 	/*
 	 * Post serve para postar no banco de dados os dados que o usuario registrou durante
 	 * seu uso do site
+	 * 
+	 * Não é  recomendável passar a entidade como parâmetro de um request body, por isso
+	 * usa-se o anime request (para evitar que a pessoa possa passar o id como parametro
+	 * por exemplo)
 	 */
 	@PostMapping
-	public ResponseEntity<Anime> save(@RequestBody Anime anime) {
+	public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBody animePostRequestBody) {
 		
 		// Essa é outra forma de utilizar a entidade para também retornar o status de criado
 		// Lembrando que esse status está associado a um número
-		return new ResponseEntity<>(animeService.save(anime), HttpStatus.CREATED);
+		return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
+	}
+	
+	/*
+	 * Delete serve para deletar do banco de dados o id que o usuario registrou durante
+	 * seu uso do site
+	 */
+	@DeleteMapping(path = "/{id}")
+	public ResponseEntity<Anime> delete(@PathVariable Long id) {
+		
+		//Excluir anime
+		animeService.remove(id);
+		
+		// Essa é outra forma de utilizar a entidade para também retornar o status de criado
+		// Lembrando que esse status está associado a um número
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	/*
+	 * Put serve para substituir uma instância já existente
+	 */
+	@PutMapping
+	public ResponseEntity<Anime> replace(@RequestBody AnimePutRequestBody animePutRequestBody) {
+		
+		animeService.replace(animePutRequestBody);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }
