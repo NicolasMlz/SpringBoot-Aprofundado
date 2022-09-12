@@ -13,7 +13,7 @@ import java.util.List;
  * apenas a primeira página contendo os 5 elementos
  */
 @Configuration
-public class DevDojoWebMvnConfigurer implements WebMvcConfigurer {
+public class DevDojoWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {

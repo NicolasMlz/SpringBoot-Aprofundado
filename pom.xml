@@ -59,6 +59,13 @@
 			<optional>true</optional>
 		</dependency>
 		
+		<!-- Dependencia que utiliza banco de dados temporário para os testes-->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>		
+		
 		<!-- Dependência de teste unitário do Spring Boot-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

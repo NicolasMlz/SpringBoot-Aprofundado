@@ -42,8 +42,13 @@ public class AnimeService {
 	
 	//Methods
 	/* O list ALL é pouco utilizado por motivos óbvios*/
-	public Page<Anime> listAll(Pageable pageable) {
+	public Page<Anime> list(Pageable pageable) {
 		return animeRepository.findAll(pageable);
+	}
+	
+	//Obter todos os animes
+	public List<Anime> listAll() {
+		return animeRepository.findAll();
 	}
 	
 	//Obter anime por nome

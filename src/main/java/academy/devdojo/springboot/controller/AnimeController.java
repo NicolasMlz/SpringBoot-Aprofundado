@@ -114,7 +114,13 @@ public class AnimeController {
 	@GetMapping
 	public ResponseEntity<Page<Anime>> list(Pageable pageable) {
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
-        return ResponseEntity.ok(animeService.listAll(pageable));
+        return ResponseEntity.ok(animeService.list(pageable));
+    }
+	
+	// Retornar todas as intâncias sem o parametro paginável
+	@GetMapping(path = "/all")
+	public ResponseEntity<List<Anime>> list() {
+        return ResponseEntity.ok(animeService.listAll());
     }
 	
 	/*
