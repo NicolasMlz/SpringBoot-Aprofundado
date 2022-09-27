@@ -36,4 +36,5 @@ public interface AnimeRepository extends JpaRepository<Anime, Long>{
 	 */
 	public List<Anime> findByName(String name);
 
+	
 }
